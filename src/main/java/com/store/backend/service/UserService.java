@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private LocalUserDAO localUserDAO;
+    private EncryptionService encryptionService;
 
-    public UserService(LocalUserDAO localUserDAO) {
+
+    public UserService(LocalUserDAO localUserDAO, EncryptionService encryptionService) {
         this.localUserDAO = localUserDAO;
+        this.encryptionService = encryptionService;
     }
 
 
@@ -26,8 +29,7 @@ public class UserService {
         user.setUsername(registrationBody.getUsername());
         user.setFirstName(registrationBody.getFirstName());
         user.setLastName(registrationBody.getLastName());
-        //TODO: Encrypt passwords!!
-        user.setPassword(registrationBody.getPassword());
+        user.setPassword(encryptionService.encryptPassword(registrationBody.getPassword()));
         return localUserDAO.save(user);
     }
 
