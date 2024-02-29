@@ -3,29 +3,40 @@ package com.store.backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "inventory")
-public class Inventory {
+@Table(name = "web_order_quantities")
+public class WebOrderQuantities {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(optional = false, orphanRemoval = true)
-    @JoinColumn(name = "product_id", nullable = false, unique = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    private WebOrder order;
+
+    public WebOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(WebOrder order) {
+        this.order = order;
+    }
 
     public Integer getQuantity() {
         return quantity;
     }
 
-
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
     public Product getProduct() {
         return product;
     }
