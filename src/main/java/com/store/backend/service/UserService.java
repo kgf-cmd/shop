@@ -87,4 +87,18 @@ public class UserService {
         return null;
     }
 
+    public boolean verifyUser(String token){
+        Optional<VerificationToken> opToken = verificationTokenDAO.findByToken(token);
+        if (opToken.isPresent()){
+            VerificationToken verificationToken = opToken.get();
+            LocalUser user = verificationToken.getUser();
+            if (!user.isEmailVerified()){
+                user.setEmailVerified(true);
+                localUserDAO.save(user);
+                verificationTokenDAO.deleteByUser(user);
+                return true;
+            }
+        }
+        return false;
+    }
 }
