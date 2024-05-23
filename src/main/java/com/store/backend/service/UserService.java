@@ -10,6 +10,7 @@ import com.store.backend.model.VerificationToken;
 import com.store.backend.model.dao.LocalUserDAO;
 import com.store.backend.model.dao.VerificationTokenDAO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -30,7 +31,8 @@ public class UserService {
     private EmailService emailService;
 
 
-    public UserService(LocalUserDAO localUserDAO, EncryptionService encryptionService, JWTService jwtService) {
+    public UserService(LocalUserDAO localUserDAO, VerificationTokenDAO verificationTokenDAO, EncryptionService encryptionService,
+                       JWTService jwtService, EmailService emailService) {
         this.localUserDAO = localUserDAO;
         this.encryptionService = encryptionService;
         this.jwtService = jwtService;
@@ -87,6 +89,7 @@ public class UserService {
         return null;
     }
 
+    @Transactional
     public boolean verifyUser(String token){
         Optional<VerificationToken> opToken = verificationTokenDAO.findByToken(token);
         if (opToken.isPresent()){
